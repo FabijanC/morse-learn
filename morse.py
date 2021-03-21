@@ -89,19 +89,20 @@ while True:
         if random_key in random_keys:
             continue
         random_keys.append(random_key)
-        correct.append(selected_dict[random_key])
+        correct.append(selected_dict[random_key].lower())
 
     while True:
         try:
-            received_raw = input(f"{' '.join(random_keys)}: ")
-        except EOFError as e:
+            received_raw = input(f"{' '.join(random_keys)} ")
+        except:
             print()
             exit()
 
-        received = [part.strip() for part in received_raw.strip().split()]
+        received_lower = received_raw.lower()
+        received = [part.strip() for part in received_lower.strip().split()]
         if not received:
             continue
-        if received == correct:
+        if received == correct or list(received_lower.strip()) == correct:
             break
 
         print("Wrong!")
