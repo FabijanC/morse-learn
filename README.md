@@ -8,7 +8,9 @@ The program requires Python 3 to be installed.
 
 # Installation
 
-Clone this repository via `git clone`.
+1. Clone this repository via `git clone`.
+2. Install the dependencies with `pip install -r requirements.txt`
+   - preferably create a virtual environment for this
 
 # Usage
 

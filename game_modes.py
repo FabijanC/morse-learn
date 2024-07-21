@@ -4,6 +4,8 @@ from abc import ABC
 import random
 from typing import Dict, List, Tuple, Type
 
+from musicalbeeps import Player
+
 import data
 
 
@@ -103,7 +105,7 @@ class CodeToLetterMode(GameMode):
         return "code-to-letter"
 
     def get_startup_message(self) -> str:
-        msg = "Respond with letters. Case is ignored"
+        msg = "Respond with letters. Case is ignored."
         if self.prompt_length > 1:
             msg += " You may optionally separate the letters with spaces."
         return msg
@@ -115,6 +117,39 @@ class CodeToLetterMode(GameMode):
         return [_normalize_text(part) for part in input().split()]
 
 
+class AudioToLetterMode(CodeToLetterMode):
+    """
+    Game mode where the user listens to audio, recognize the encoded letters, and type them.
+    """
+
+    DEFAULT_NOTE = "A"
+    DURATION_MAP = {
+        ".": 0.2,
+        "-": 0.5,
+    }
+    SYMBOL_PAUSE_DURATION = 0.2
+    LETTER_PAUSE_DURATION = 0.5
+
+    def __init__(self, prompt_length: int):
+        super().__init__(prompt_length)
+        self.player = Player(volume=0.5, mute_output=True)
+
+    @classmethod
+    def get_selector(cls):
+        return "audio-to-letter"
+
+    def display_prompt(self, prompt_tokens: List[str]):
+        for token in prompt_tokens:
+            for morse_symbol in token:
+                duration = self.DURATION_MAP[morse_symbol]
+                self.player.play_note(self.DEFAULT_NOTE, duration=duration)
+                self.player.play_note("pause", duration=self.SYMBOL_PAUSE_DURATION)
+            self.player.play_note("pause", duration=self.LETTER_PAUSE_DURATION)
+
+        return "(Press Enter to replay)"
+
+
 SELECTOR_TO_MODE: Dict[str, Type[GameMode]] = {
-    mode.get_selector(): mode for mode in [LetterToCodeMode]
+    mode.get_selector(): mode
+    for mode in [LetterToCodeMode, CodeToLetterMode, AudioToLetterMode]
 }
