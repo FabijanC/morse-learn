@@ -6,6 +6,10 @@ A CLI program for learning Morse code.
 
 The program requires Python 3 to be installed.
 
+# Installation
+
+Clone this repository via `git clone`.
+
 # Usage
 
 ```
@@ -23,4 +27,6 @@ Correct!
 
 ## Options
 
-Select between letter-to-code and code-to-letter modes by providing `-m` or `--mode`. By default, every prompt contains one symbol to convert. Modify this by specifying `-n <NUMBER>`.
+Select between letter-to-code and code-to-letter modes by providing a value to `-m` or `--mode`. By default, every prompt contains one symbol to convert. Modify this by specifying `-n <NUMBER>`.
+
+See options with `./morse.py --help`.

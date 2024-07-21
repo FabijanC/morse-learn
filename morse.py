@@ -3,8 +3,9 @@
 """
 This is a CLI program for learning Morse code.
 After starting the program, you are prompted with cues, to which you respond by typing the answer:
-- in letter-to-code mode, type the Morse code of the given letter by using dots (.) and dashes (-)
-- in code-to-letter mode, type the letter corresponding to the shown Morse code
+
+1. in letter-to-code mode, type the Morse code of the given letter by using dots (.) and dashes (-)
+2. in code-to-letter mode, type the letter corresponding to the shown Morse code
 
 Exit by pressing Ctrl+D.
 """
@@ -28,7 +29,9 @@ def positive_int(n):
 LETTER_TO_CODE_SELECTOR = "letter-to-code"
 CODE_TO_LETTER_SELECTOR = "code-to-letter"
 
-parser = argparse.ArgumentParser(description=__doc__)
+parser = argparse.ArgumentParser(
+    description=__doc__, formatter_class=argparse.ArgumentDefaultsHelpFormatter
+)
 parser.add_argument(
     "--mode",
     "-m",
