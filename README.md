@@ -14,6 +14,8 @@ The program requires Python 3 to be installed.
 
 # Usage
 
+## letter-to-code mode (default)
+
 ```
 $ ./morse.py
 V ...-
@@ -27,8 +29,16 @@ Correct!
 # Ctrl+D to exit
 ```
 
+## audio-to-letter mode
+```
+$ ./morse.py --mode audio-to-letter
+# sound playing
+(Press Enter to replay) -.-.
+Correct!
+```
+
 ## Options
 
-Select between letter-to-code and code-to-letter modes by providing a value to `-m` or `--mode`. By default, every prompt contains one symbol to convert. Modify this by specifying `-n <NUMBER>`.
+Select between between various modes by providing a value to `-m` or `--mode`. By default, every prompt contains one symbol to convert. Modify this by specifying `-n <NUMBER>`.
 
 See options with `./morse.py --help`.
