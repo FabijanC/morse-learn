@@ -57,7 +57,7 @@ while True:
     # input loop
     while True:
         try:
-            print(prompt, end=" ")
+            mode.display_prompt(prompt)
             answer = mode.get_normalized_input_tokens()
         except (KeyboardInterrupt, EOFError):
             # Handles Ctrl+C, Ctrl+D

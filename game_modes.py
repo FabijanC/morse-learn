@@ -38,8 +38,8 @@ class GameMode(ABC):
         """Return the message to be displayed on startup."""
         raise NotImplementedError
 
-    def display_prompt(self, prompt_tokens: List[str]) -> str:
-        """Return displayable format of prompt."""
+    def display_prompt(self, prompt_tokens: List[str]):
+        """Perform the action of prompt displaying; e.g. printing"""
         raise NotImplementedError
 
     def generate_next(self) -> Tuple[str, List[str]]:
@@ -56,7 +56,7 @@ class GameMode(ABC):
 
         self.generated_questions_count += 1
 
-        return self.display_prompt(random_keys), correct
+        return random_keys, correct
 
     def get_normalized_input_tokens(self) -> List[str]:
         """Receive input from the user and return a list of normalized tokens."""
@@ -83,7 +83,7 @@ class LetterToCodeMode(GameMode):
         return msg
 
     def display_prompt(self, prompt_tokens: List[str]):
-        return "".join(prompt_tokens)
+        print("".join(prompt_tokens), end=" ")
 
     def get_normalized_input_tokens(self) -> List[str]:
         return [part for part in input().split()]
@@ -111,7 +111,7 @@ class CodeToLetterMode(GameMode):
         return msg
 
     def display_prompt(self, prompt_tokens: List[str]):
-        return " ".join(prompt_tokens)
+        print(" ".join(prompt_tokens), end=" ")
 
     def get_normalized_input_tokens(self) -> List[str]:
         return [_normalize_text(part) for part in input().split()]
@@ -146,7 +146,7 @@ class AudioToLetterMode(CodeToLetterMode):
                 self.player.play_note("pause", duration=self.SYMBOL_PAUSE_DURATION)
             self.player.play_note("pause", duration=self.LETTER_PAUSE_DURATION)
 
-        return "(Press Enter to replay)"
+        print("(Press Enter to replay)")
 
 
 SELECTOR_TO_MODE: Dict[str, Type[GameMode]] = {
