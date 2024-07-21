@@ -1,91 +1,69 @@
 #!/usr/bin/python3
+
+"""
+This is a CLI program for learning Morse code.
+After starting the program, you are prompted with cues, to which you respond by typing the answer:
+- in letter-to-code mode, type the Morse code of the given letter by using dots (.) and dashes (-)
+- in code-to-letter mode, type the letter corresponding to the shown Morse code
+
+Exit by pressing Ctrl+D.
+"""
+
 import random
 import argparse
+import sys
 
-### DATA START
-letter2code = {
-    "A": ".-",
-    "B": "-...",
-    "C": "-.-.",
-    "D": "-..",
-    "E": ".",
-    "F": "..-.",
-    "G": "--.",
-    "H": "....",
-    "I": "..",
-    "J": ".---",
-    "K": "-.-",
-    "L": ".-..",
-    "M": "--",
-    "N": "-.",
-    "O": "---",
-    "P": ".--.",
-    "Q": "--.-",
-    "R": ".-.",
-    "S": "...",
-    "T": "-",
-    "U": "..-",
-    "V": "...-",
-    "W": ".--",
-    "X": "-..-",
-    "Y": "-.--",
-    "Z": "--.."
-}
+import data
 
-letters = letter2code.keys()
-codes = letter2code.values()
-sorted_letters = sorted(letters)
-assert len(letters) == len(set(letters))
-assert len(letters) == 26
-assert sorted_letters[0] == "A"
-assert sorted_letters[-1] == "Z"
-assert all(map(lambda code: all(map(lambda symbol: symbol in ".-", code)), codes))
-assert len(set(codes)) == len(codes)
-assert len(codes) == 26
-### DATA END
 
-## CLI START
+## CLI CONFIG START
 def positive_int(n):
+    """Parse positive int"""
     int_n = int(n)
     if int_n > 0:
         return int_n
-    else:
-        raise ValueError("n must be positive")
+    raise ValueError("value must be positive")
 
-LETTER2CODE = 1
-CODE2LETTER = 2
-parser = argparse.ArgumentParser(description="Morse code learning app")
+
+LETTER_TO_CODE_SELECTOR = "letter-to-code"
+CODE_TO_LETTER_SELECTOR = "code-to-letter"
+
+parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument(
-    "--mode", "-m",
-    choices=[LETTER2CODE, CODE2LETTER],
-    default=LETTER2CODE,
-    type=int,
-    help="1: letter->code\n2: code->letter"
+    "--mode",
+    "-m",
+    type=str,
+    choices=[LETTER_TO_CODE_SELECTOR, CODE_TO_LETTER_SELECTOR],
+    default=LETTER_TO_CODE_SELECTOR,
+    help="Selector of what is prompted",
 )
 parser.add_argument(
     "-n",
     type=positive_int,
     default=1,
-    help="The length of sequences to guess"
+    help="The length of sequences to guess",
 )
 args = parser.parse_args()
 
-if args.mode == LETTER2CODE:
-    sorted_keys = sorted_letters
-    selected_dict = letter2code
+print("Selected mode:", args.mode)
+if args.mode == LETTER_TO_CODE_SELECTOR:
+    keys = list(data.letter2code.keys())
+    selected_dict = data.letter2code
+    print("Respond with dots and dashes.")
+    if args.n > 1:
+        print("Separate the codes with spaces.")
 else:
-    sorted_keys = sorted(codes)
-    reversed_dict = {}
-    for letter in letter2code:
-        reversed_dict[letter2code[letter]] = letter
-    selected_dict = reversed_dict
-### CLI END
+    keys = sorted(data.codes)
+    selected_dict = {code: letter for letter, code in data.letter2code.items()}
+
+print("Press Ctrl+D or Ctrl+C to exit\n")
+### CLI CONFIG END
 
 while True:
     random_keys = []
     correct = []
     while len(random_keys) < args.n:
-        random_key = random.choice(sorted_keys)
+        random_key = random.choice(keys)
         if random_key in random_keys:
             continue
         random_keys.append(random_key)
@@ -94,9 +72,10 @@ while True:
     while True:
         try:
             received_raw = input(f"{' '.join(random_keys)} ")
-        except:
+        except (KeyboardInterrupt, EOFError):
+            # Handles Ctrl+C, Ctrl+D
             print()
-            exit()
+            sys.exit()
 
         received_lower = received_raw.lower()
         received = [part.strip() for part in received_lower.strip().split()]
@@ -108,4 +87,3 @@ while True:
         print("Wrong!")
 
     print("Correct!\n")
-
