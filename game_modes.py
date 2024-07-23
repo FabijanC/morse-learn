@@ -114,12 +114,14 @@ class CodeToLetterMode(GameMode):
         print(" ".join(prompt_tokens), end=" ")
 
     def get_normalized_input_tokens(self) -> List[str]:
-        return [_normalize_text(part) for part in input().split()]
+        raw = input()
+        normalized = _normalize_text(raw)
+        return [c for c in normalized if c.isalnum()]
 
 
 class AudioToLetterMode(CodeToLetterMode):
     """
-    Game mode where the user listens to audio, recognize the encoded letters, and type them.
+    Game mode where the user listens to audio, recognizes the encoded letters and types them.
     """
 
     DEFAULT_NOTE = "A"
@@ -146,7 +148,7 @@ class AudioToLetterMode(CodeToLetterMode):
                 self.player.play_note("pause", duration=self.SYMBOL_PAUSE_DURATION)
             self.player.play_note("pause", duration=self.LETTER_PAUSE_DURATION)
 
-        print("(Press Enter to replay)")
+        print("(Press Enter to replay)", end=" ")
 
 
 SELECTOR_TO_MODE: Dict[str, Type[GameMode]] = {
